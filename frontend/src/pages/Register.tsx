@@ -37,6 +37,7 @@ export default function Register() {
         email: form.email,
         phone: form.phone,
         password: form.password,
+        captcha_token: 'test-captcha',
       });
       toast.success('Registration successful! Please log in.');
       navigate('/');
