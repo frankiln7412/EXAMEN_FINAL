@@ -20,9 +20,9 @@ export default function AuditLogs() {
   const load = async () => {
     setLoading(true);
     try {
-      const { data } = await api.get('/admin/audit-logs', { params: { page, limit: 20 } });
-      setLogs(data.audit_logs || data.logs || data.data || data);
-      setTotalPages(data.total_pages || data.pages || 1);
+      const { data } = await api.get('/admin/audit-logs', { params: { page, per_page: 20 } });
+      setLogs(data.data || []);
+      setTotalPages(data.last_page || 1);
     } catch {
       toast.error('Failed to load audit logs');
     } finally {
