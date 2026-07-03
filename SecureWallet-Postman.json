@@ -27,7 +27,7 @@
       "name": "Auth",
       "item": [
         {
-          "name": "Register (RF-01)",
+          "name": "Registrar (RF-01)",
           "event": [
             {
               "listen": "test",
@@ -47,7 +47,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"name\": \"Test User\",\n  \"ci\": \"99999999\",\n  \"email\": \"test@test.com\",\n  \"phone\": \"70999999\",\n  \"password\": \"Test1234!@\",\n  \"captcha_token\": \"test-captcha\"\n}"
+              "raw": "{\n  \"name\": \"Nuevo Usuario\",\n  \"ci\": \"55555555\",\n  \"email\": \"nuevo@test.com\",\n  \"phone\": \"70555555\",\n  \"password\": \"MiPassword1!\",\n  \"captcha_token\": \"test-captcha\"\n}"
             },
             "url": {
               "raw": "{{base_url}}/auth/register",
@@ -57,7 +57,7 @@
           }
         },
         {
-          "name": "Login (RF-02) - Juan Perez",
+          "name": "Iniciar Sesión - Juan Pérez (RF-02)",
           "event": [
             {
               "listen": "test",
@@ -92,7 +92,7 @@
           }
         },
         {
-          "name": "Login - Admin",
+          "name": "Iniciar Sesión - Admin",
           "event": [
             {
               "listen": "test",
@@ -122,7 +122,7 @@
           }
         },
         {
-          "name": "Login - Maria Lopez",
+          "name": "Iniciar Sesión - María López",
           "event": [
             {
               "listen": "test",
@@ -152,7 +152,39 @@
           }
         },
         {
-          "name": "Refresh Token (RS-07)",
+          "name": "Habilitar MFA (RF-03)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/auth/mfa/enable",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "mfa", "enable"]
+            }
+          }
+        },
+        {
+          "name": "Verificar MFA",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"ticket\": \"{{ticket}}\",\n  \"totp_code\": \"123456\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/mfa/verify",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "mfa", "verify"]
+            }
+          }
+        },
+        {
+          "name": "Renovar Token (Refresh)",
           "event": [
             {
               "listen": "test",
@@ -182,7 +214,7 @@
           }
         },
         {
-          "name": "Logout (RF-10)",
+          "name": "Cerrar Sesión (RF-10)",
           "request": {
             "method": "POST",
             "header": [
@@ -195,46 +227,14 @@
               "path": ["auth", "logout"]
             }
           }
-        },
-        {
-          "name": "Enable MFA (RF-03)",
-          "request": {
-            "method": "POST",
-            "header": [
-              { "key": "Authorization", "value": "Bearer {{token}}" }
-            ],
-            "url": {
-              "raw": "{{base_url}}/auth/mfa/enable",
-              "host": ["{{base_url}}"],
-              "path": ["auth", "mfa", "enable"]
-            }
-          }
-        },
-        {
-          "name": "MFA Verify",
-          "request": {
-            "method": "POST",
-            "header": [
-              { "key": "Content-Type", "value": "application/json" }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"ticket\": \"{{ticket}}\",\n  \"totp_code\": \"123456\"\n}"
-            },
-            "url": {
-              "raw": "{{base_url}}/auth/mfa/verify",
-              "host": ["{{base_url}}"],
-              "path": ["auth", "mfa", "verify"]
-            }
-          }
         }
       ]
     },
     {
-      "name": "Profile & Wallet",
+      "name": "Perfil y Billetera",
       "item": [
         {
-          "name": "Get Profile (RF-04)",
+          "name": "Ver Perfil (RF-04)",
           "request": {
             "method": "GET",
             "header": [
@@ -248,7 +248,7 @@
           }
         },
         {
-          "name": "Get Balance (RF-04)",
+          "name": "Ver Saldo (RF-04)",
           "request": {
             "method": "GET",
             "header": [
@@ -262,7 +262,7 @@
           }
         },
         {
-          "name": "Top Up (RF-05)",
+          "name": "Recargar Saldo (RF-05)",
           "request": {
             "method": "POST",
             "header": [
@@ -283,10 +283,10 @@
       ]
     },
     {
-      "name": "Transfers",
+      "name": "Transferencias",
       "item": [
         {
-          "name": "Create Transfer (RF-06)",
+          "name": "Crear Transferencia (RF-06)",
           "request": {
             "method": "POST",
             "header": [
@@ -296,7 +296,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"destinatario\": \"maria@test.com\",\n  \"monto\": 100.00,\n  \"descripcion\": \"Pago prueba\"\n}"
+              "raw": "{\n  \"destinatario\": \"maria@test.com\",\n  \"monto\": 100.00,\n  \"descripcion\": \"Pago almuerzo\"\n}"
             },
             "url": {
               "raw": "{{base_url}}/transfers",
@@ -306,7 +306,7 @@
           }
         },
         {
-          "name": "Confirm Transfer (RF-07)",
+          "name": "Confirmar Transferencia (RF-07)",
           "request": {
             "method": "POST",
             "header": [
@@ -325,7 +325,7 @@
           }
         },
         {
-          "name": "Create Transfer +500 (TOTP Required)",
+          "name": "Crear Transferencia +500 (Requiere TOTP)",
           "request": {
             "method": "POST",
             "header": [
@@ -347,10 +347,10 @@
       ]
     },
     {
-      "name": "Transactions",
+      "name": "Transacciones",
       "item": [
         {
-          "name": "Get History (RF-08)",
+          "name": "Ver Historial (RF-08)",
           "request": {
             "method": "GET",
             "header": [
@@ -367,7 +367,7 @@
           }
         },
         {
-          "name": "Get History - Filtered by type (RF-08)",
+          "name": "Ver Historial - Filtrado por tipo (RF-08)",
           "request": {
             "method": "GET",
             "header": [
@@ -390,8 +390,7 @@
       "name": "Admin (RF-09)",
       "item": [
         {
-          "name": "List Users (Admin only)",
-
+          "name": "Listar Usuarios (Solo Admin)",
           "request": {
             "method": "GET",
             "header": [
@@ -405,8 +404,7 @@
           }
         },
         {
-          "name": "Block/Unblock User (Admin only)",
-
+          "name": "Bloquear/Desbloquear Usuario (Solo Admin)",
           "request": {
             "method": "PATCH",
             "header": [
@@ -421,8 +419,7 @@
           }
         },
         {
-          "name": "Audit Logs (Admin only)",
-
+          "name": "Ver Bitácora de Auditoría (RS-09)",
           "request": {
             "method": "GET",
             "header": [
@@ -441,10 +438,10 @@
       ]
     },
     {
-      "name": "PRUEBAS DE SEGURIDAD (ATAQUES)",
+      "name": "Pruebas de Seguridad",
       "item": [
         {
-          "name": "[RS-01] IDOR - Access other user data",
+          "name": "[RS-01] IDOR - Acceder a billetera de otro usuario",
           "request": {
             "method": "GET",
             "header": [
@@ -459,7 +456,7 @@
           }
         },
         {
-          "name": "[RS-02] RBAC - User tries Admin endpoint",
+          "name": "[RS-02] RBAC - Usuario normal accede a Admin",
           "request": {
             "method": "GET",
             "header": [
@@ -474,7 +471,41 @@
           }
         },
         {
-          "name": "[RS-05] Idempotency - Double charge test",
+          "name": "[RS-03] Datos sensibles no expuestos",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/me",
+              "host": ["{{base_url}}"],
+              "path": ["me"]
+            },
+            "description": "La respuesta NUNCA debe contener password, mfa_secret ni refresh_token. Verificar en BD que contraseñas están hasheadas con bcrypt (costo >= 12)."
+          }
+        },
+        {
+          "name": "[RS-04] Inyección SQL",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"' OR 1=1 --\",\n  \"password\": \"test\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/login",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "login"]
+            },
+            "description": "Debe responder 401 o 422. El ORM escapa la inyección SQL automáticamente."
+          }
+        },
+        {
+          "name": "[RS-05] Idempotencia - Doble cobro",
           "request": {
             "method": "POST",
             "header": [
@@ -491,11 +522,27 @@
               "host": ["{{base_url}}"],
               "path": ["transfers"]
             },
-            "description": "Enviar 2 veces con la misma Idempotency-Key. La segunda debe responder 409 Conflict."
+            "description": "Enviar 2 veces con la misma Idempotency-Key. La segunda debe responder 409 Conflict - 'This request has already been processed'."
           }
         },
         {
-          "name": "[RS-07] Refresh Token Reuse Detection",
+          "name": "[RS-06] CORS - Origen no válido",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Origin", "value": "https://evil-site.com" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/me",
+              "host": ["{{base_url}}"],
+              "path": ["me"]
+            },
+            "description": "Con Origin malicioso, CORS debe bloquear la respuesta. Solo permite http://localhost:5173."
+          }
+        },
+        {
+          "name": "[RS-07] Reutilización de Refresh Token",
           "request": {
             "method": "POST",
             "header": [
@@ -510,11 +557,11 @@
               "host": ["{{base_url}}"],
               "path": ["auth", "refresh"]
             },
-            "description": "1. Hacer login. 2. Usar refresh_token (funciona). 3. Usar EL MISMO refresh_token otra vez. Debe dar 401 - 'Token reuse detected'"
+            "description": "1. Hacer login. 2. Usar refresh_token (funciona). 3. Usar EL MISMO refresh_token otra vez. Debe dar 401 - 'Token reuse detected. All tokens revoked.'"
           }
         },
         {
-          "name": "[RS-08] Rate Limit - 6 failed logins",
+          "name": "[RS-08] Rate Limit - 6 intentos fallidos",
           "request": {
             "method": "POST",
             "header": [
@@ -533,42 +580,7 @@
           }
         },
         {
-          "name": "[RS-04] SQL Injection attempt",
-          "request": {
-            "method": "POST",
-            "header": [
-              { "key": "Content-Type", "value": "application/json" }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"email\": \"' OR 1=1 --\",\n  \"password\": \"test\"\n}"
-            },
-            "url": {
-              "raw": "{{base_url}}/auth/login",
-              "host": ["{{base_url}}"],
-              "path": ["auth", "login"]
-            },
-            "description": "Debe responder 401 o 422. El ORM escapa la inyección SQL."
-          }
-        },
-        {
-          "name": "[RS-06] Invalid Origin (CORS test)",
-          "request": {
-            "method": "GET",
-            "header": [
-              { "key": "Authorization", "value": "Bearer {{token}}" },
-              { "key": "Origin", "value": "https://evil-site.com" }
-            ],
-            "url": {
-              "raw": "{{base_url}}/me",
-              "host": ["{{base_url}}"],
-              "path": ["me"]
-            },
-            "description": "Con Origin malicioso, CORS debe bloquear la respuesta."
-          }
-        },
-        {
-          "name": "[RS-03] Check sensitive data not exposed",
+          "name": "[RS-10] XSS/CSRF (Frontend)",
           "request": {
             "method": "GET",
             "header": [
@@ -579,7 +591,7 @@
               "host": ["{{base_url}}"],
               "path": ["me"]
             },
-            "description": "La respuesta NUNCA debe contener password, mfa_secret ni refresh_token."
+            "description": "El frontend React escapa todo el output automáticamente (XSS). Los tokens se manejan por header Authorization: Bearer, no por cookies (CSRF)."
           }
         }
       ]
