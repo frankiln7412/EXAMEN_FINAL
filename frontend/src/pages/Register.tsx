@@ -37,11 +37,12 @@ export default function Register() {
         email: form.email,
         phone: form.phone,
         password: form.password,
+        captcha_token: 'test-captcha',
       });
       toast.success('Registration successful! Please log in.');
       navigate('/');
     } catch (err: any) {
-      toast.error(err.response?.data?.detail || 'Registration failed');
+      toast.error(err.response?.data?.message || 'Registration failed');
     } finally {
       setSubmitting(false);
     }

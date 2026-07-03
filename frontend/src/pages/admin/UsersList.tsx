@@ -3,7 +3,7 @@ import toast from 'react-hot-toast';
 import api from '../../lib/api';
 
 interface User {
-  id: number;
+  uuid: string;
   name: string;
   email: string;
   role: string;
@@ -17,7 +17,7 @@ export default function UsersList() {
   const load = async () => {
     try {
       const { data } = await api.get('/admin/users');
-      setUsers(data.users || data);
+      setUsers(data.data || data);
     } catch {
       toast.error('Failed to load users');
     } finally {
@@ -27,13 +27,13 @@ export default function UsersList() {
 
   useEffect(() => { load(); }, []);
 
-  const toggleBlock = async (userId: number, currentActive: boolean) => {
+  const toggleBlock = async (userUuid: string) => {
     try {
-      await api.patch(`/admin/users/${userId}/status`, { is_active: !currentActive });
-      toast.success(`User ${currentActive ? 'blocked' : 'unblocked'}`);
+      const { data } = await api.patch(`/admin/users/${userUuid}/block`);
+      toast.success(data.message || 'User updated');
       load();
     } catch (err: any) {
-      toast.error(err.response?.data?.detail || 'Failed to update user');
+      toast.error(err.response?.data?.message || 'Failed to update user');
     }
   };
 
@@ -53,7 +53,7 @@ export default function UsersList() {
           <table className="w-full text-sm">
             <thead>
               <tr className="bg-gray-50 text-left text-gray-500">
-                <th className="py-3 px-4 font-medium">ID</th>
+                <th className="py-3 px-4 font-medium">UUID</th>
                 <th className="py-3 px-4 font-medium">Name</th>
                 <th className="py-3 px-4 font-medium">Email</th>
                 <th className="py-3 px-4 font-medium">Role</th>
@@ -63,8 +63,8 @@ export default function UsersList() {
             </thead>
             <tbody>
               {users.map((user) => (
-                <tr key={user.id} className="border-b border-gray-100 hover:bg-gray-50">
-                  <td className="py-3 px-4">{user.id}</td>
+                <tr key={user.uuid} className="border-b border-gray-100 hover:bg-gray-50">
+                  <td className="py-3 px-4 font-mono text-xs">{user.uuid}</td>
                   <td className="py-3 px-4 font-medium text-gray-800">{user.name}</td>
                   <td className="py-3 px-4 text-gray-600">{user.email}</td>
                   <td className="py-3 px-4 capitalize">{user.role}</td>
@@ -77,7 +77,7 @@ export default function UsersList() {
                   </td>
                   <td className="py-3 px-4">
                     <button
-                      onClick={() => toggleBlock(user.id, user.is_active)}
+                      onClick={() => toggleBlock(user.uuid)}
                       className={`px-3 py-1.5 text-xs font-medium rounded-lg transition-colors ${
                         user.is_active
                           ? 'bg-red-100 text-red-700 hover:bg-red-200'

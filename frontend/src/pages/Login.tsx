@@ -9,6 +9,7 @@ export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [mfaCode, setMfaCode] = useState('');
+  const [mfaTicket, setMfaTicket] = useState('');
   const [requiresMfa, setRequiresMfa] = useState(false);
   const [submitting, setSubmitting] = useState(false);
 
@@ -17,8 +18,8 @@ export default function Login() {
     setSubmitting(true);
     try {
       if (requiresMfa) {
-        const { data } = await api.post('/auth/verify-mfa', {
-          email,
+        const { data } = await api.post('/auth/mfa/verify', {
+          ticket: mfaTicket,
           totp_code: mfaCode,
         });
         setTokens(data.access_token, data.refresh_token);
@@ -27,8 +28,9 @@ export default function Login() {
         navigate('/dashboard');
       } else {
         const { data } = await api.post('/auth/login', { email, password });
-        if (data.requires_mfa) {
+        if (data.mfa_required) {
           setRequiresMfa(true);
+          setMfaTicket(data.ticket);
         } else {
           setTokens(data.access_token, data.refresh_token);
           setUser(data.user);
@@ -37,7 +39,7 @@ export default function Login() {
         }
       }
     } catch (err: any) {
-      toast.error(err.response?.data?.detail || 'Login failed');
+      toast.error(err.response?.data?.message || 'Login failed');
     } finally {
       setSubmitting(false);
     }

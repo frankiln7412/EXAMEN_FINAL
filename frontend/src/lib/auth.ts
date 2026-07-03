@@ -1,12 +1,12 @@
 export interface User {
-  id: number;
+  uuid: string;
   name: string;
-  ci: string;
+  ci?: string;
   email: string;
-  phone: string;
+  phone?: string;
   role: string;
-  is_active: boolean;
-  is_mfa_enabled: boolean;
+  is_active?: boolean;
+  is_mfa_enabled?: boolean;
 }
 
 const ACCESS_TOKEN_KEY = 'access_token';

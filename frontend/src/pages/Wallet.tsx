@@ -27,10 +27,10 @@ export default function WalletPage() {
     try {
       const [walletRes, txRes] = await Promise.all([
         api.get('/wallet'),
-        api.get('/transactions?limit=10'),
+        api.get('/transactions', { params: { per_page: 10 } }),
       ]);
       setWallet(walletRes.data);
-      setTransactions(txRes.data.transactions || txRes.data);
+      setTransactions(txRes.data.data || txRes.data);
     } catch {
       toast.error('Failed to load wallet data');
     } finally {
@@ -49,12 +49,12 @@ export default function WalletPage() {
     }
     setSubmitting(true);
     try {
-      await api.post('/wallet/top-up', { amount });
+      await api.post('/wallet/topup', { amount });
       toast.success('Wallet topped up successfully');
       setTopUpAmount('');
       load();
     } catch (err: any) {
-      toast.error(err.response?.data?.detail || 'Top-up failed');
+      toast.error(err.response?.data?.message || 'Top-up failed');
     } finally {
       setSubmitting(false);
     }
@@ -130,8 +130,8 @@ export default function WalletPage() {
                   <tr key={tx.id} className="border-b border-gray-100">
                     <td className="py-3 capitalize">{tx.type}</td>
                     <td className="py-3 font-medium">
-                      <span className={tx.type === 'top_up' ? 'text-green-600' : 'text-red-600'}>
-                        {tx.type === 'top_up' ? '+' : '-'}${Number(tx.amount).toFixed(2)}
+                      <span className={tx.type === 'topup' ? 'text-green-600' : (tx.type === 'receive' ? 'text-green-600' : 'text-red-600')}>
+                        {tx.type === 'topup' || tx.type === 'receive' ? '+' : '-'}${Number(tx.amount).toFixed(2)}
                       </span>
                     </td>
                     <td className="py-3 text-gray-600">{tx.description || '-'}</td>
