@@ -63,7 +63,7 @@ export default function UsersList() {
             </thead>
             <tbody>
               {users.map((user) => (
-                <tr key={user.id} className="border-b border-gray-100 hover:bg-gray-50">
+                <tr key={user.uuid} className="border-b border-gray-100 hover:bg-gray-50">
                   <td className="py-3 px-4 font-mono text-xs">{user.uuid}</td>
                   <td className="py-3 px-4 font-medium text-gray-800">{user.name}</td>
                   <td className="py-3 px-4 text-gray-600">{user.email}</td>
