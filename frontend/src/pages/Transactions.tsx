@@ -21,11 +21,11 @@ export default function TransactionsPage() {
   const load = async () => {
     setLoading(true);
     try {
-      const params: any = { page, limit: 15 };
+      const params: any = { page, per_page: 15 };
       if (typeFilter) params.type = typeFilter;
       const { data } = await api.get('/transactions', { params });
-      setTransactions(data.transactions || data.data || data);
-      setTotalPages(data.total_pages || data.pages || 1);
+      setTransactions(data.data || []);
+      setTotalPages(data.last_page || 1);
     } catch {
       toast.error('Failed to load transactions');
     } finally {
@@ -52,9 +52,9 @@ export default function TransactionsPage() {
             className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none text-sm"
           >
             <option value="">All</option>
-            <option value="top_up">Top Up</option>
-            <option value="transfer">Transfer</option>
-            <option value="payment">Payment</option>
+            <option value="topup">Top Up</option>
+            <option value="send">Sent</option>
+            <option value="receive">Received</option>
           </select>
         </div>
         {loading ? (
@@ -80,8 +80,8 @@ export default function TransactionsPage() {
                   <tr key={tx.id} className="border-b border-gray-100 hover:bg-gray-50">
                     <td className="py-3 capitalize">{tx.type}</td>
                     <td className="py-3 font-medium">
-                      <span className={tx.type === 'top_up' ? 'text-green-600' : 'text-red-600'}>
-                        {tx.type === 'top_up' ? '+' : '-'}${Number(tx.amount).toFixed(2)}
+                      <span className={tx.type === 'topup' ? 'text-green-600' : (tx.type === 'receive' ? 'text-green-600' : 'text-red-600')}>
+                        {tx.type === 'topup' || tx.type === 'receive' ? '+' : '-'}${Number(tx.amount).toFixed(2)}
                       </span>
                     </td>
                     <td className="py-3 text-gray-600">{tx.description || '-'}</td>
