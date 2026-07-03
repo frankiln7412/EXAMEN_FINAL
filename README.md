@@ -8,11 +8,11 @@
 
 ## Autores
 
-| Nombre | Rol |
-|--------|-----|
-| _Nombre del integrante 1_ | _backend_ |
-| _Nombre del integrante 2_ | _frontend_ |
-| _Nombre del integrante 3_ | _seguridad/pruebas_ |
+| Nombre                           | Rol                                  |
+| -------------------------------- | ------------------------------------ |
+| _Benjamin Franklin Olmedo Porco_ | _backend and frontend_               |
+| _Cesar Araoz_                    | _frontend and backend_               |
+| _Franklin Melendres Caceres_     | _seguridad/pruebas frontend/backend_ |
 
 ---
 
@@ -49,28 +49,28 @@ npm run dev
 
 ### Usuarios de prueba (seeders)
 
-| Rol | Nombre | Email | Contrasena |
-|-----|--------|-------|-----------|
-| ADMIN | Admin | admin@securewallet.com | Admin123!@# |
-| USER | Juan Perez | juan@test.com | User1234!@ |
-| USER | Maria Lopez | maria@test.com | User1234!@ |
+| Rol   | Nombre      | Email                  | Contrasena  |
+| ----- | ----------- | ---------------------- | ----------- |
+| ADMIN | Admin       | <admin@securewallet.com> | Admin123!@# |
+| USER  | Juan Perez  | <juan@test.com>          | User1234!@  |
+| USER  | Maria Lopez | <maria@test.com>         | User1234!@  |
 
 ---
 
 ## Controles de seguridad implementados (OWASP Top 10 2021)
 
-| Codigo | OWASP | Control | Verificacion |
-|--------|-------|---------|-------------|
-| RS-01 | A01 - Broken Access Control | UUID publicos, prevencion IDOR | Manipular UUID de otro usuario devuelve 403/404 |
-| RS-02 | A01 - Broken Access Control | RBAC (USER/ADMIN) + middleware 403 | Token USER en endpoint admin devuelve 403 |
-| RS-03 | A02 - Cryptographic Failures | bcrypt cost >= 12, secrets ocultos en JSON | Ningun endpoint expone password o mfa_secret |
-| RS-04 | A03 - Injection | Eloquent ORM + Form Requests con validacion estricta | SQL injection no cuela, campos extra ignorados |
-| RS-05 | A04 - Insecure Design | Transacciones DB + FOR UPDATE + Idempotency-Key | 2 transfers concurrentes no generan saldo negativo |
-| RS-06 | A05 - Security Misconfiguration | CORS restringido, errores genericos en produccion | CORS bloquea origenes no autorizados |
-| RS-07 | A07 - Identification Failures | Access token 15 min, refresh con rotacion y deteccion de reuso | Refresh token reutilizado revoca toda la familia |
-| RS-08 | A07 - Identification Failures | Rate limiting (5/min login, 10/min transfers) | Intento 6 en login devuelve 429 |
-| RS-09 | A09 - Security Logging | Auditoria inmutable con IP, user-agent, solo ADMIN | Bitacora consultable solo por ADMIN |
-| RS-10 | XSS / CSRF (transversal) | Salida escapada (React), Bearer tokens en localStorage | Sin innerHTML, auth via Bearer header |
+| Codigo | OWASP                           | Control                                                        | Verificacion                                       |
+| ------ | ------------------------------- | -------------------------------------------------------------- | -------------------------------------------------- |
+| RS-01  | A01 - Broken Access Control     | UUID publicos, prevencion IDOR                                 | Manipular UUID de otro usuario devuelve 403/404    |
+| RS-02  | A01 - Broken Access Control     | RBAC (USER/ADMIN) + middleware 403                             | Token USER en endpoint admin devuelve 403          |
+| RS-03  | A02 - Cryptographic Failures    | bcrypt cost >= 12, secrets ocultos en JSON                     | Ningun endpoint expone password o mfa_secret       |
+| RS-04  | A03 - Injection                 | Eloquent ORM + Form Requests con validacion estricta           | SQL injection no cuela, campos extra ignorados     |
+| RS-05  | A04 - Insecure Design           | Transacciones DB + FOR UPDATE + Idempotency-Key                | 2 transfers concurrentes no generan saldo negativo |
+| RS-06  | A05 - Security Misconfiguration | CORS restringido, errores genericos en produccion              | CORS bloquea origenes no autorizados               |
+| RS-07  | A07 - Identification Failures   | Access token 15 min, refresh con rotacion y deteccion de reuso | Refresh token reutilizado revoca toda la familia   |
+| RS-08  | A07 - Identification Failures   | Rate limiting (5/min login, 10/min transfers)                  | Intento 6 en login devuelve 429                    |
+| RS-09  | A09 - Security Logging          | Auditoria inmutable con IP, user-agent, solo ADMIN             | Bitacora consultable solo por ADMIN                |
+| RS-10  | XSS / CSRF (transversal)        | Salida escapada (React), Bearer tokens en localStorage         | Sin innerHTML, auth via Bearer header              |
 
 ---
 
@@ -107,23 +107,23 @@ npm run dev
 
 ## Endpoints de la API
 
-| Metodo | Endpoint | Acceso | Descripcion |
-|--------|----------|--------|-------------|
-| POST | /api/v1/auth/register | Publico | Registro + CAPTCHA |
-| POST | /api/v1/auth/login | Publico | Login (MFA si esta habilitado) |
-| POST | /api/v1/auth/mfa/verify | Publico* | Verifica TOTP y emite tokens |
-| POST | /api/v1/auth/mfa/enable | USER | Activar MFA + QR |
-| POST | /api/v1/auth/refresh | Publico* | Rotar refresh token |
-| POST | /api/v1/auth/logout | USER | Revocar tokens |
-| GET | /api/v1/me | USER | Perfil autenticado |
-| GET | /api/v1/wallet | USER | Saldo actual |
-| POST | /api/v1/wallet/topup | USER | Recarga de saldo |
-| POST | /api/v1/transfers | USER | Crear transferencia (Idempotency-Key) |
-| POST | /api/v1/transfers/{uuid}/confirm | USER | Confirmar transferencia (+TOTP si >500 Bs) |
-| GET | /api/v1/transactions | USER | Historial paginado |
-| GET | /api/v1/admin/users | ADMIN | Listar usuarios |
-| PATCH | /api/v1/admin/users/{uuid}/block | ADMIN | Bloquear/desbloquear |
-| GET | /api/v1/admin/audit-logs | ADMIN | Bitacora de auditoria |
+| Metodo | Endpoint                         | Acceso    | Descripcion                                |
+| ------ | -------------------------------- | --------- | ------------------------------------------ |
+| POST   | /api/v1/auth/register            | Publico   | Registro + CAPTCHA                         |
+| POST   | /api/v1/auth/login               | Publico   | Login (MFA si esta habilitado)             |
+| POST   | /api/v1/auth/mfa/verify          | Publico\* | Verifica TOTP y emite tokens               |
+| POST   | /api/v1/auth/mfa/enable          | USER      | Activar MFA + QR                           |
+| POST   | /api/v1/auth/refresh             | Publico\* | Rotar refresh token                        |
+| POST   | /api/v1/auth/logout              | USER      | Revocar tokens                             |
+| GET    | /api/v1/me                       | USER      | Perfil autenticado                         |
+| GET    | /api/v1/wallet                   | USER      | Saldo actual                               |
+| POST   | /api/v1/wallet/topup             | USER      | Recarga de saldo                           |
+| POST   | /api/v1/transfers                | USER      | Crear transferencia (Idempotency-Key)      |
+| POST   | /api/v1/transfers/{uuid}/confirm | USER      | Confirmar transferencia (+TOTP si >500 Bs) |
+| GET    | /api/v1/transactions             | USER      | Historial paginado                         |
+| GET    | /api/v1/admin/users              | ADMIN     | Listar usuarios                            |
+| PATCH  | /api/v1/admin/users/{uuid}/block | ADMIN     | Bloquear/desbloquear                       |
+| GET    | /api/v1/admin/audit-logs         | ADMIN     | Bitacora de auditoria                      |
 
 ---
 
@@ -153,3 +153,4 @@ Importar `SecureWallet-Postman.json` en Postman/Insomnia. Incluye ejemplos de pe
 - El archivo `.env` **no debe versionarse**. Usar `.env.example` como plantilla.
 - En produccion, establecer `APP_DEBUG=false` para evitar fugas de informacion en errores.
 - Los tokens se almacenan en localStorage. Las contrasenas deben cumplir: minimo 10 caracteres, mayuscula, minuscula, digito y simbolo.
+
