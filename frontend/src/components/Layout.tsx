@@ -1,4 +1,4 @@
-import { Link, Outlet, useNavigate } from 'react-router-dom';
+import { Link, Outlet, useNavigate, useLocation } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import { getUser, clearTokens, clearUser } from '../lib/auth';
 import api from '../lib/api';
@@ -11,12 +11,13 @@ interface WalletInfo {
 
 export default function Layout() {
   const navigate = useNavigate();
+  const location = useLocation();
   const user = getUser();
   const [wallet, setWallet] = useState<WalletInfo | null>(null);
 
   useEffect(() => {
     api.get('/wallet').then(({ data }) => setWallet(data)).catch(() => {});
-  }, []);
+  }, [location.pathname]);
 
   const handleLogout = async () => {
     try {
@@ -58,6 +59,7 @@ export default function Layout() {
           {navLink('/wallet', 'Wallet')}
           {navLink('/transfer', 'Transfer')}
           {navLink('/transactions', 'Transactions')}
+          {navLink('/mfa/enable', 'MFA Setup')}
           {user?.role === 'admin' && (
             <>
               <div className="text-indigo-400 text-xs uppercase tracking-wider px-4 pt-4 pb-1 font-semibold">

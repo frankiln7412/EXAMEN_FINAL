@@ -20,6 +20,7 @@ Route::prefix('v1')->group(function () {
     Route::middleware('auth:sanctum')->group(function () {
         Route::post('auth/logout', [AuthController::class, 'logout']);
         Route::post('auth/mfa/enable', [AuthController::class, 'enableMfa']);
+        Route::post('auth/mfa/disable', [AuthController::class, 'disableMfa']);
 
         Route::get('me', [ProfileController::class, 'me']);
 

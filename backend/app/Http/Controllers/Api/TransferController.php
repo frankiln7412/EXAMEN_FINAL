@@ -48,6 +48,10 @@ class TransferController extends Controller
             return response()->json(['message' => 'Insufficient balance.'], 422);
         }
 
+        if ($request->monto > 500 && !$user->mfa_enabled) {
+            return response()->json(['message' => 'Enable MFA first to transfer amounts over 500 Bs.'], 422);
+        }
+
         $requiresTotp = $request->monto > 500;
 
         $transaction = Transaction::create([
@@ -98,6 +102,10 @@ class TransferController extends Controller
         }
 
         if ($transaction->amount > 500) {
+            if (!$user->mfa_enabled) {
+                return response()->json(['message' => 'MFA must be enabled to transfer amounts over 500 Bs.'], 422);
+            }
+
             $totpCode = $request->totp_code;
             if (!$totpCode) {
                 return response()->json(['message' => 'TOTP code is required for amounts over 500.'], 422);

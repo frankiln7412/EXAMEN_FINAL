@@ -25,7 +25,6 @@ export default function App() {
       <Routes>
         <Route path="/" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/mfa/enable" element={<EnableMfa />} />
         <Route
           element={
             <ProtectedRoute>
@@ -37,6 +36,7 @@ export default function App() {
           <Route path="/wallet" element={<WalletPage />} />
           <Route path="/transfer" element={<Transfer />} />
           <Route path="/transactions" element={<TransactionsPage />} />
+          <Route path="/mfa/enable" element={<EnableMfa />} />
           <Route path="/admin/users" element={
             <ProtectedRoute adminOnly>
               <UsersList />

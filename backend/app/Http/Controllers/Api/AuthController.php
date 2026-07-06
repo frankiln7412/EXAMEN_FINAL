@@ -84,15 +84,6 @@ class AuthController extends Controller
             return response()->json(['message' => 'Invalid credentials.'], 401);
         }
 
-        if ($user->mfa_enabled) {
-            $ticket = Crypt::encryptString($user->id);
-            AuditService::logWithRequest($user->id, 'mfa_required', $request);
-            return response()->json([
-                'mfa_required' => true,
-                'ticket' => $ticket,
-            ]);
-        }
-
         $user->update(['login_attempts' => 0, 'blocked_until' => null]);
 
         $abilities = $user->isAdmin() ? ['admin'] : ['user'];
@@ -253,5 +244,19 @@ class AuthController extends Controller
             'secret' => $secret,
             'qr_code_url' => $qrCodeUrl,
         ]);
+    }
+
+    public function disableMfa(Request $request)
+    {
+        $user = $request->user();
+
+        $user->update([
+            'mfa_secret' => null,
+            'mfa_enabled' => false,
+        ]);
+
+        AuditService::logWithRequest($user->id, 'mfa_disabled', $request);
+
+        return response()->json(['message' => 'MFA disabled successfully.']);
     }
 }
