@@ -130,8 +130,8 @@ export default function WalletPage() {
                   <tr key={tx.id} className="border-b border-gray-100">
                     <td className="py-3 capitalize">{tx.type}</td>
                     <td className="py-3 font-medium">
-                      <span className={tx.type === 'topup' ? 'text-green-600' : (tx.type === 'receive' ? 'text-green-600' : 'text-red-600')}>
-                        {tx.type === 'topup' || tx.type === 'receive' ? '+' : '-'}${Number(tx.amount).toFixed(2)}
+                      <span className={tx.type === 'topup' || tx.type === 'transfer_in' ? 'text-green-600' : 'text-red-600'}>
+                        {tx.type === 'topup' || tx.type === 'transfer_in' ? '+' : '-'}${Number(tx.amount).toFixed(2)}
                       </span>
                     </td>
                     <td className="py-3 text-gray-600">{tx.description || '-'}</td>
