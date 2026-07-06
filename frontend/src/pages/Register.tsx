@@ -42,7 +42,14 @@ export default function Register() {
       toast.success('Registration successful! Please log in.');
       navigate('/');
     } catch (err: any) {
-      toast.error(err.response?.data?.message || 'Registration failed');
+      const msg = err.response?.data?.message || 'Registration failed';
+      const errors = err.response?.data?.errors;
+      if (errors) {
+        const details = Object.entries(errors).map(([, msgs]) => (msgs as string[]).join(', ')).join(' | ');
+        toast.error(details || msg);
+      } else {
+        toast.error(msg);
+      }
     } finally {
       setSubmitting(false);
     }
