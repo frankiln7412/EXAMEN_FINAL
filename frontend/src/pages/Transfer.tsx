@@ -33,8 +33,8 @@ export default function Transfer() {
       }, {
         headers: { 'Idempotency-Key': generateIdempotencyKey() },
       });
-      setPendingUuid(data.uuid);
-      setRequiresTotp(data.requiere_totp || false);
+      setPendingUuid(data.transaction_uuid);
+      setRequiresTotp(data.requires_totp || false);
       setStep(2);
     } catch (err: any) {
       toast.error(err.response?.data?.message || 'Transfer initiation failed');
