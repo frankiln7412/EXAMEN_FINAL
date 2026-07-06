@@ -110,13 +110,11 @@ class TransferController extends Controller
             }
         }
 
-        $recipientWallet = $transaction->counterparty;
-
         try {
             DB::beginTransaction();
 
-            $senderLocked = $senderWallet->lockForUpdate()->first();
-            $recipientLocked = $recipientWallet->lockForUpdate()->first();
+            $senderLocked = $user->wallet()->lockForUpdate()->first();
+            $recipientLocked = $transaction->counterparty()->lockForUpdate()->first();
 
             if ($senderLocked->balance < $transaction->amount) {
                 $transaction->update(['status' => 'failed']);
@@ -134,10 +132,10 @@ class TransferController extends Controller
             ]);
 
             Transaction::create([
-                'wallet_id' => $recipientWallet->id,
+                'wallet_id' => $recipientLocked->id,
                 'type' => 'transfer_in',
                 'amount' => $transaction->amount,
-                'counterparty_id' => $senderWallet->id,
+                'counterparty_id' => $senderLocked->id,
                 'description' => $transaction->description,
                 'balance_before' => $recipientLocked->balance - $transaction->amount,
                 'balance_after' => $recipientLocked->balance,
